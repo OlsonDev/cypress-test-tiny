@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Obscure me with your favorite app</title>
+    <style>
+      #global-loading {
+        display: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: fixed;
+        background: rgba(0, 0, 0, 0.35);
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #global-loading.active {
+        display: flex;
+      }
+
+      img {
+        max-width: 400px;
+        max-height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="load-content">Load content</button>
+    <div id="content"></div>
+    <div id="global-loading">Loading...</div>
+    <script>
+      const content = document.getElementById('content')
+      const loadBtn = document.getElementById('load-content')
+      const loading = document.getElementById('global-loading')
+
+      loadBtn.addEventListener('click', () => {
+        loading.classList.add('active')
+        content.replaceChildren()
+        fetch('https://cataas.com/cat')
+          .then(response => response.blob())
+          .then(image => {
+            const img = document.createElement('img')
+            img.src = URL.createObjectURL(image)
+            content.appendChild(img)
+            const newBtn = document.createElement('button')
+            newBtn.id = 'new-btn'
+            newBtn.textContent = 'New button'
+            content.appendChild(newBtn)
+            newBtn.addEventListener('click', () => {
+              content.append('Hello Cypress!')
+            })
+            loading.classList.remove('active')
+          })
+      })
+    </script>
+  </body>
+</html>
